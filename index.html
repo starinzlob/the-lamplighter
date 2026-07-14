@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Old Press · 老报纸卡片生成器</title>
+<meta name="description" content="把任何文字印成老报纸——金句卡、报纸剪报、通缉令、电报。复古印刷质感，支持中文，免费无水印。">
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="references/tokens.css">
+<link rel="stylesheet" href="references/textures.css">
+<script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #37332A;
+    font-family: "Special Elite", "Courier New", monospace;
+    color: #E9E3D3;
+    display: flex;
+    flex-direction: column;
+  }
+  header.app {
+    text-align: center;
+    padding: 1.2rem 1rem .9rem;
+    border-bottom: 1px solid #55503F;
+  }
+  header.app h1 {
+    font-family: "UnifrakturMaguntia", serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #E9E3D3;
+  }
+  header.app p { font-size: .72rem; color: #A29A82; margin-top: .3rem; letter-spacing: .1em; }
+  main { flex: 1; display: flex; min-height: 0; }
+  /* ---- control panel ---- */
+  .panel {
+    width: 330px;
+    padding: 1.2rem;
+    overflow-y: auto;
+    border-right: 1px solid #55503F;
+    flex-shrink: 0;
+  }
+  .panel label { display: block; font-size: .68rem; letter-spacing: .15em; color: #A29A82; margin: 1rem 0 .3rem; }
+  .panel input, .panel textarea, .panel select {
+    width: 100%;
+    background: #2A2620;
+    border: 1px solid #55503F;
+    color: #E9E3D3;
+    font-family: inherit;
+    font-size: .85rem;
+    padding: .5rem .6rem;
+  }
+  .panel textarea { min-height: 5.5rem; resize: vertical; }
+  .tabs { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .tabs button {
+    flex: 1 1 45%;
+    background: #2A2620;
+    border: 1px solid #55503F;
+    color: #A29A82;
+    font-family: inherit;
+    font-size: .78rem;
+    padding: .55rem .3rem;
+    cursor: pointer;
+  }
+  .tabs button.on { background: #E9E3D3; color: #1E1C17; border-color: #E9E3D3; }
+  .row2 { display: flex; gap: .5rem; }
+  .row2 > div { flex: 1; }
+  .print-btn {
+    width: 100%;
+    margin-top: 1.4rem;
+    font-family: inherit;
+    font-size: 1rem;
+    letter-spacing: .2em;
+    padding: .9rem;
+    background: #8E2F27;
+    color: #E9E3D3;
+    border: none;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,.35);
+    cursor: pointer;
+  }
+  .print-btn:active { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(0,0,0,.35); }
+  .hint { font-size: .65rem; color: #6A6452; margin-top: .6rem; line-height: 1.6; }
+  /* ---- stage ---- */
+  .stagewrap { flex: 1; display: grid; place-items: center; overflow: auto; padding: 2rem; }
+  #scaler { transform-origin: center center; }
+  /* =========================================================
+     CARD STYLES — everything below is old-press printed matter
+     ========================================================= */
+  .card {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif-en), var(--serif-cn);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card .frame { flex: 1; display: flex; flex-direction: column; border: 3px double var(--rule); margin: 26px; padding: 70px 64px; min-height: 0; }
+  .c-mast { font-family: var(--blackletter); text-align: center; color: var(--ink-deep); font-size: 52px; }
+  .c-dateline {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 19px; color: var(--muted);
+    border-top: 4px double var(--ink); border-bottom: 1px solid var(--rule);
+    padding: 9px 4px; margin-top: 20px;
+  }
+  /* quote card */
+  .q-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 30px 0; }
+  .q-body .txt { font-size: 58px; line-height: 1.45; color: var(--ink-deep); white-space: pre-wrap; }
+  .q-body .txt::before { content: "『"; color: var(--red); }
+  .q-body .txt::after { content: "』"; color: var(--red); }
+  .q-by { font-feature-settings: "smcp"; letter-spacing: .22em; font-size: 25px; color: var(--muted); text-align: center; }
+  .q-by::before { content: "— "; color: var(--brass); }
+  .c-foot { font-family: var(--mono); font-size: 17px; color: var(--faded); text-align: center; border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 26px; }
+  /* clipping */
+  .clip { width: 860px; padding: 54px 58px 60px; background: var(--paper); }
+  .clip-edge { clip-path: polygon(0 14px,3% 4px,7% 12px,12% 2px,18% 10px,24% 3px,30% 12px,37% 5px,44% 11px,51% 2px,58% 10px,65% 4px,72% 12px,79% 3px,86% 10px,93% 2px,100% 12px,100% calc(100% - 12px),95% calc(100% - 3px),89% calc(100% - 11px),82% calc(100% - 4px),75% calc(100% - 12px),68% calc(100% - 3px),61% calc(100% - 10px),54% calc(100% - 2px),47% calc(100% - 11px),40% calc(100% - 4px),33% calc(100% - 12px),26% calc(100% - 5px),19% calc(100% - 11px),12% calc(100% - 3px),6% calc(100% - 10px),0 calc(100% - 4px)); }
+  .clip .kicker { font-family: var(--mono); font-size: 17px; letter-spacing: .2em; color: var(--muted); text-align: center; border-bottom: 1px solid var(--rule); padding-bottom: 10px; }
+  .clip h2 { font-size: 54px; line-height: 1.15; text-align: center; color: var(--ink-deep); margin: 26px 0 8px; }
+  .clip .deck { font-style: italic; text-align: center; color: var(--muted); font-size: 23px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 9px 0; margin-bottom: 26px; }
+  .clip .cols { column-count: 2; column-gap: 34px; column-rule: 1px solid var(--rule); font-size: 21px; line-height: 1.75; text-align: justify; white-space: pre-wrap; }
+  .clip .cols::first-letter { font-size: 3em; float: left; line-height: .8; padding: .04em .1em 0 0; color: var(--ink-deep); }
+  /* wanted */
+  .wanted .frame { border-width: 5px; border-style: double; text-align: center; }
+  .w-head { font-size: 150px; letter-spacing: .06em; color: var(--ink-deep); font-weight: 700; line-height: 1; }
+  .w-sub { font-family: var(--mono); font-size: 21px; letter-spacing: .3em; color: var(--muted); margin: 18px 0 30px; }
+  .w-name { flex: 0 0 auto; font-family: var(--blackletter); font-size: 88px; color: var(--red); margin: 8px 0; }
+  .w-crime { flex: 1; font-size: 30px; line-height: 1.7; color: var(--ink); display: grid; place-items: center; padding: 0 30px; white-space: pre-wrap; }
+  .w-reward { font-size: 44px; color: var(--ink-deep); border-top: 4px double var(--ink); border-bottom: 4px double var(--ink); padding: 18px 0; letter-spacing: .1em; }
+  .w-apply { font-family: var(--mono); font-size: 18px; color: var(--faded); letter-spacing: .2em; margin-top: 24px; }
+  /* telegram */
+  .tele { justify-content: center; }
+  .tele .frame { padding: 46px 56px; }
+  .t-office { font-family: var(--mono); font-size: 22px; letter-spacing: .35em; text-align: center; color: var(--ink-deep); border-bottom: 4px double var(--ink); padding-bottom: 14px; }
+  .t-morse { font-family: var(--mono); text-align: center; color: var(--faded); font-size: 19px; margin: 16px 0; letter-spacing: .12em; }
+  .t-msg { flex: 1; font-family: var(--mono); font-size: 34px; line-height: 1.8; text-transform: uppercase; color: var(--ink); display: grid; place-items: center; text-align: center; padding: 10px 0; white-space: pre-wrap; }
+  .t-meta { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 18px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; }
+</style>
+</head>
+<body>
+<header class="app">
+  <h1>The Old Press</h1>
+  <p>老报纸卡片生成器 · 把任何文字印成 1926 年的样子 · 免费无水印</p>
+</header>
+<main>
+  <div class="panel">
+    <label>印刷品种类 TEMPLATE</label>
+    <div class="tabs" id="tpl-tabs"></div>
+    <div id="fields"></div>
+    <div class="row2">
+      <div>
+        <label>墨水主题 THEME</label>
+        <select id="theme">
+          <option value="">日版（奶油纸）</option>
+          <option value="night">煤气灯夜版</option>
+          <option value="vapor">蒸汽波错版</option>
+        </select>
+      </div>
+      <div>
+        <label>尺寸 SIZE</label>
+        <select id="size"></select>
+      </div>
+    </div>
+    <button class="print-btn" id="print">开 印 · PRINT</button>
+    <p class="hint">导出 2× 高清 PNG。字体来自 Google Fonts，首次导出需稍候字体内联。<br>An old-press printing house · MIT</p>
+  </div>
+  <div class="stagewrap"><div id="scaler"><div id="stage"></div></div></div>
+</main>
+<script>
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const TPLS = [
+  {
+    id:'quote', name:'金句卡',
+    sizes:[{label:'3:4 小红书 1080×1440',w:1080,h:1440},{label:'1:1 方形 1080×1080',w:1080,h:1080},{label:'16:9 横版 1280×720',w:1280,h:720}],
+    fields:[
+      {k:'mast',l:'报头 MASTHEAD',t:'input',d:'The Old Press Gazette'},
+      {k:'q',l:'金句正文',t:'textarea',d:'凡本铺印品，须经得起复印机的考验。'},
+      {k:'by',l:'署名',t:'input',d:'THE COMPOSITOR'},
+      {k:'date',l:'日期栏',t:'input',d:'LONDON, 1926'},
+    ],
+    render:d=>`<div class="frame op-grain">
+      <div class="c-mast">${esc(d.mast)}</div>
+      <div class="c-dateline"><span>EXTRA EDITION</span><span>${esc(d.date)}</span><span>ONE PENNY</span></div>
+      <div class="q-body"><div class="txt op-misreg">${esc(d.q)}</div></div>
+      <div class="q-by">${esc(d.by)}</div>
+      <div class="c-foot">SET BY HAND · PRINTED BADLY ON PURPOSE</div></div>`
+  },
+  {
+    id:'clip', name:'报纸剪报',
+    sizes:[{label:'剪报 860×自适应',w:860,h:0}],
+    fields:[
+      {k:'kicker',l:'眉线（报名·日期）',t:'input',d:'THE OLD PRESS GAZETTE — LONDON, TUESDAY'},
+      {k:'head',l:'大标题',t:'input',d:'本地程序员深夜发布小工具'},
+      {k:'deck',l:'副题 DECK',t:'input',d:'Being an account of a most curious contrivance.'},
+      {k:'body',l:'正文（自动分两栏）',t:'textarea',d:'本报讯——昨夜有目击者称，一名程序员在自家阁楼点着煤气灯，将一件小工具推上了 GitHub。该工具据信能把任何文字印成一百年前的报纸。邻居表示噪音主要来自机械键盘。警方到场后没有发现违法行为，但带走了一杯凉掉的咖啡作为证物。'},
+    ],
+    render:d=>`<div class="clip clip-edge op-grain">
+      <div class="kicker">${esc(d.kicker)}</div>
+      <h2 class="op-misreg">${esc(d.head)}</h2>
+      <div class="deck">${esc(d.deck)}</div>
+      <div class="cols">${esc(d.body)}</div></div>`
+  },
+  {
+    id:'wanted', name:'通缉令',
+    sizes:[{label:'3:4 海报 1080×1440',w:1080,h:1440}],
+    fields:[
+      {k:'name',l:'通缉对象',t:'input',d:'The Procrastinator'},
+      {k:'crime',l:'罪名描述',t:'textarea',d:'涉嫌把「明天再做」说了 365 次。\n最后一次出现于凌晨两点的沙发。'},
+      {k:'reward',l:'悬赏',t:'input',d:'£500 REWARD'},
+      {k:'apply',l:'落款',t:'input',d:'APPLY: SCOTLAND YARD, WHITEHALL'},
+    ],
+    render:d=>`<div class="frame op-grain">
+      <div class="w-head op-misreg">WANTED</div>
+      <div class="w-sub">DEAD OR ALIVE · 生 死 不 论</div>
+      <div class="w-name">${esc(d.name)}</div>
+      <div class="w-crime">${esc(d.crime)}</div>
+      <div class="w-reward">${esc(d.reward)}</div>
+      <div class="w-apply">${esc(d.apply)}</div></div>`
+  },
+  {
+    id:'tele', name:'电报',
+    sizes:[{label:'16:9 X卡片 1280×720',w:1280,h:720},{label:'4:3 横版 1200×900',w:1200,h:900}],
+    fields:[
+      {k:'msg',l:'电文（自动大写，句读用 STOP）',t:'textarea',d:'SHIPPED AT MIDNIGHT STOP NO REGRETS STOP'},
+      {k:'from',l:'发报人',t:'input',d:'FROM: THE COMPOSITOR'},
+      {k:'date',l:'日期',t:'input',d:'LONDON, 1926'},
+    ],
+    render:d=>`<div class="frame op-grain">
+      <div class="t-office">POST OFFICE TELEGRAPHS</div>
+      <div class="t-morse">· · · — — — · · · &nbsp; RECEIVED &nbsp; · · · — — — · · ·</div>
+      <div class="t-msg">${esc(d.msg)}</div>
+      <div class="t-meta"><span>${esc(d.from)}</span><span>${esc(d.date)}</span></div></div>`
+  },
+];
+
+const $ = s => document.querySelector(s);
+let cur = TPLS[0];
+
+function buildTabs(){
+  $('#tpl-tabs').innerHTML = TPLS.map(t=>`<button data-id="${t.id}" class="${t===cur?'on':''}">${t.name}</button>`).join('');
+  $('#tpl-tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=TPLS.find(t=>t.id===b.dataset.id);buildTabs();buildFields();buildSizes();paint();});
+}
+function buildFields(){
+  $('#fields').innerHTML = cur.fields.map(f=>`<label>${f.l}</label>`+(f.t==='textarea'
+    ?`<textarea data-k="${f.k}">${f.d}</textarea>`
+    :`<input data-k="${f.k}" value="${f.d.replace(/"/g,'&quot;')}">`)).join('');
+  $('#fields').querySelectorAll('[data-k]').forEach(e=>e.addEventListener('input',paint));
+}
+function buildSizes(){
+  $('#size').innerHTML = cur.sizes.map((s,i)=>`<option value="${i}">${s.label}</option>`).join('');
+}
+function data(){
+  const d={}; $('#fields').querySelectorAll('[data-k]').forEach(e=>d[e.dataset.k]=e.value); return d;
+}
+function paint(){
+  const s = cur.sizes[+$('#size').value||0];
+  const stage = $('#stage');
+  stage.className = 'card ' + cur.id + ' ' + ($('#theme').value||'');
+  stage.style.width = s.w+'px';
+  stage.style.height = s.h? s.h+'px':'auto';
+  stage.innerHTML = cur.render(data());
+  // theme class must live on the card for tokens to cascade
+  stage.classList.remove('night','vapor');
+  if($('#theme').value) stage.classList.add($('#theme').value);
+  fit();
+}
+function fit(){
+  const wrap=$('.stagewrap'), st=$('#stage'), sc=$('#scaler');
+  const k=Math.min((wrap.clientWidth-64)/st.offsetWidth,(wrap.clientHeight-64)/st.offsetHeight,1);
+  sc.style.transform=`scale(${k})`;
+  sc.style.transformOrigin='top left';
+  // transform doesn't change layout size — pin the scaled box so centering works
+  sc.style.width=st.offsetWidth*k+'px';
+  sc.style.height=st.offsetHeight*k+'px';
+}
+window.addEventListener('resize',fit);
+$('#theme').addEventListener('change',paint);
+$('#size').addEventListener('change',paint);
+$('#print').onclick = async ()=>{
+  const btn=$('#print'); btn.textContent='印 刷 中 …';
+  try{
+    const png = await htmlToImage.toPng($('#stage'),{pixelRatio:2});
+    const a=document.createElement('a');
+    a.href=png; a.download=`oldpress-${cur.id}-${Date.now()}.png`; a.click();
+  }catch(e){ alert('印刷机卡纸了: '+e.message); }
+  btn.textContent='开 印 · PRINT';
+};
+// tokens.css themes are keyed on body.night/body.vapor — mirror onto body-level
+// vars by also declaring the classes usable on any element:
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`.night{--paper:#23211B;--ink:#D9D0B6;--ink-deep:#E9E3D3;--red:#C4655C;--brass:#A8842C;--muted:#A29A82;--faded:#8F8975;--rule:#3B382F}
+  .vapor{--red:#C25C8A;--brass:#5FB3B3;--ink:#3A3550;--rarity-misprint:#9B8CDB}`;
+  document.head.appendChild(style);
+})();
+buildTabs();buildFields();buildSizes();paint();
+</script>
+</body>
+</html>

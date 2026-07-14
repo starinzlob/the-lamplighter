@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>old-press · quote card 1080×1440</title>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../references/tokens.css">
+<link rel="stylesheet" href="../references/textures.css">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1440px; overflow: hidden; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif-en), var(--serif-cn);
+    display: flex;
+  }
+  .card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 90px 84px;
+    border: 3px double var(--rule);
+    margin: 28px;
+  }
+  .masthead {
+    font-family: var(--blackletter);
+    font-size: 54px;
+    text-align: center;
+    color: var(--ink-deep);
+  }
+  .dateline {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--muted);
+    border-top: 4px double var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 4px;
+    margin: 22px 0 0;
+  }
+  .quote {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px 0;
+  }
+  .quote blockquote {
+    font-size: 64px;
+    line-height: 1.42;
+    color: var(--ink-deep);
+    max-width: 16em;
+  }
+  .quote blockquote::before { content: "『"; color: var(--red); }
+  .quote blockquote::after  { content: "』"; color: var(--red); }
+  .by {
+    font-feature-settings: "smcp";
+    letter-spacing: .22em;
+    font-size: 26px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 8px;
+  }
+  .by::before { content: "— "; color: var(--brass); }
+  .foot {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--faded);
+    text-align: center;
+    border-top: 1px solid var(--rule);
+    padding-top: 18px;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+  <div class="card op-grain">
+    <div class="masthead op-inkbleed" data-f="mast">The Old Press Gazette</div>
+    <div class="dateline">
+      <span data-f="vol">EXTRA EDITION</span>
+      <span data-f="date">LONDON</span>
+      <span>PRICE ONE PENNY</span>
+    </div>
+    <div class="quote">
+      <blockquote class="op-misreg" data-f="q">凡本铺印品，须经得起复印机的考验。</blockquote>
+    </div>
+    <div class="by" data-f="by">THE COMPOSITOR</div>
+    <div class="foot" data-f="src">SET BY HAND · PRINTED BADLY ON PURPOSE</div>
+  </div>
+<script>
+  const p = new URLSearchParams(location.search);
+  for (const [k, v] of p) document.querySelectorAll(`[data-f="${k}"]`).forEach(e => e.textContent = v);
+  if (p.get('theme')) document.body.classList.add(p.get('theme'));
+</script>
+</body>
+</html>

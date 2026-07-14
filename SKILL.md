@@ -80,7 +80,20 @@ Don't decorate components — **recast them as print-shop objects**:
 | Footer | Colophon（版权页） |
 | Dark mode | 煤气灯夜版 — the shop after hours, not "dark theme" |
 
-## 5 · Image-generation prompts
+## 5 · Print jobs — one-line deliverables
+
+The repo root `index.html` is a self-contained card generator (serve the repo root with any static server, or use the deployed site). When the user asks for a finished image, don't restyle from scratch — drive the generator:
+
+| User asks | Template | Default size |
+|-----------|----------|--------------|
+| 金句卡 / quote share card | `quote` | 1080×1440 (3:4) |
+| 报纸剪报 / newspaper clipping, spoof headline | `clip` | 860×auto |
+| 通缉令 / wanted poster | `wanted` | 1080×1440 |
+| 电报 / announcement, changelog, status card | `tele` | 1280×720 |
+
+Agent workflow: serve repo root → open `index.html` → select template and fill fields (tab buttons carry `data-id`, inputs carry `data-k`) → set theme (`day`/`night`/`vapor`) → screenshot the `#stage` element at full size, or call `htmlToImage.toPng(document.querySelector('#stage'),{pixelRatio:2})`. `templates/quote-card.html` also accepts URL params (`?q=…&by=…&theme=night`) for zero-JS driving.
+
+## 6 · Image-generation prompts
 
 Always append the material suffix:
 
@@ -93,7 +106,7 @@ For Gaslight also add theme + negative prompt from `references/image-prompts.md`
 
 > Old London Editorial Noir — a quiet personal archive rendered through interwar British newspaper advertising, bold halftone printing, aged newsprint, engraved London architecture, warm darkness, and restrained editorial typography.
 
-## 6 · Checklist before shipping
+## 7 · Checklist before shipping
 
 - [ ] Would this survive being photocopied? (If it needs gradients/glow to work — redo)
 - [ ] At least 3 material cues from §1 present

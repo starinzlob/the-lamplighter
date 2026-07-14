@@ -1,49 +1,51 @@
-# old-press · 老印刷
+# The Old Press · 老报纸卡片生成器
 
-**Old London Editorial Noir** — a vintage-print visual style skill for AI coding agents (Claude Code / any agent that reads `SKILL.md`).
+**把任何文字印成 1926 年的样子。** 金句卡、报纸剪报、通缉令、电报——复古印刷质感，支持中文，纯前端零后端，免费无水印。
 
-一句话：让 agent 做出来的所有东西——UI、海报、落地页、生成图——都像**从一台百年老印刷机里印出来的**：半色调网点、铅印质感、旧报纸、油墨扩散、轻微套印偏移，配上严格的瑞士网格和大量留白。
+Print anything as if it came off a hundred-year-old London press: quote cards, spoof newspaper clippings, wanted posters, telegrams. Pure front-end, CJK-friendly, free, no watermark.
 
-> A quiet personal archive rendered through interwar British newspaper advertising, bold halftone printing, aged newsprint, engraved London architecture, warm darkness, and restrained editorial typography.
+> 2026 年了，fodey.com 该有个会中文的继任者了。
 
-## How it works
+## 用法 Usage
 
-Two layers:
+打开网页（或本地任何静态服务器跑仓库根目录）→ 选印刷品种类 → 填字 → 选墨水主题（日版 / 煤气灯夜版 / 蒸汽波错版）→ 开印，导出 2× 高清 PNG。
 
-| Layer | What | Swappable? |
-|-------|------|-----------|
-| **Base** | The printing craft — halftone, letterpress, newsprint, ink bleed, misregistration + strict editorial grid | Never |
-| **Theme** | The ink — default **Gaslight** (1920s British detective), alternate **Vapor** (90s vaporwave, still letterpressed) | Yes |
+```bash
+# 本地跑
+python3 -m http.server 8642
+# → http://localhost:8642
+```
 
-Ask for any subject and the paper stays the same; only the ink changes.
+## 四种印刷品
 
-The skill also recasts UI components as print-shop objects: buttons are metal type blocks, badges are wax seals, notifications are telegrams, dark mode is the gaslit shop after hours.
+| 模板 | 用途 | 尺寸 |
+|------|------|------|
+| **金句卡** | 小红书 / X 分享卡，报纸头版排面 | 3:4 · 1:1 · 16:9 |
+| **报纸剪报** | 梗图、跑团道具、生日贺报——撕边、首字下沉、双栏 | 860×自适应 |
+| **通缉令** | 表情包、活动海报、朋友的"罪行" | 3:4 |
+| **电报** | 发布公告、changelog、全大写 STOP 句读 | 16:9 · 4:3 |
 
-## Install
+## 同时是一个 agent skill
+
+仓库自带 [SKILL.md](SKILL.md)——装进 Claude Code 等 agent 后，一句"帮我把这句话印成老报纸"就能出图，agent 还能套用整套 **Old London Editorial Noir** 风格体系写 UI 和生图 prompt：恒定的印刷基底层（halftone / letterpress / 套印偏移）+ 可换的墨水主题层。
 
 ```bash
 npx skills add <this-repo-url>
 ```
 
-Or copy the folder into your agent's skills directory (e.g. `~/.agents/skills/old-press`).
-
-## What's inside
-
 ```
-SKILL.md                     the skill — rules, typography, metaphor map, checklist
-references/tokens.css        design tokens (Gaslight day/night + Vapor + rarity inks)
-references/textures.css      CSS recipes: halftone, grain, misregistration, type-block button…
-references/image-prompts.md  prompt suffixes + theme-scoped negative prompts
-demo/index.html              type specimen page (open directly in a browser)
+SKILL.md                     风格规则 + 印刷品工单（agent 入口）
+index.html                   卡片生成器本体（纯前端）
+references/tokens.css        设计令牌（日/夜/蒸汽波 + 稀有度墨色）
+references/textures.css      CSS 配方：网点、纸纹、套印偏移、铅字按钮
+references/image-prompts.md  生图提示词 + 主题限定 negative prompt
+templates/quote-card.html    URL 参数驱动的无 JS 金句卡（agent 友好）
+demo/index.html              风格样张页
 ```
 
-## Demo
+## 铁律
 
-Open `demo/index.html` — a self-contained specimen sheet showing tokens, textures, and the component metaphors in both day and night (煤气灯) modes.
-
-## The one rule
-
-**Would it survive being photocopied?** If a design needs gradients or glow to work, it's not old-press.
+**印品必须经得起复印机的考验**——不靠渐变，不靠辉光，只靠网点、油墨与留白。
 
 ## License
 
