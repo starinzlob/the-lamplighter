@@ -1,0 +1,54 @@
+/* old-press · design tokens
+   Gaslight theme (default) — day on cream paper, night as gaslit dark.
+   Drop into :root, toggle night with body.night. */
+
+:root {
+  /* paper & ink */
+  --paper: #E9E3D3;
+  --ink: #2C2924;
+  --ink-deep: #1E1C17;
+
+  /* second ink pass (accents — use sparingly, like a second run through the press) */
+  --red: #8E2F27;      /* muted red — headlines' one allowed emphasis */
+  --brass: #A8842C;    /* brass gold — hardware, links, small ornaments */
+
+  /* supporting grays (warm, never neutral) */
+  --muted: #5C574A;
+  --faded: #6A6452;
+  --rule: #8F8975;     /* column rules, hairline borders */
+  --desk: #37332A;     /* the desk the paper lies on — page background outside the sheet */
+
+  /* rarity inks (optional tiered accents, from type-bureau) */
+  --rarity-black: #2b2620;
+  --rarity-red: #a63a2b;
+  --rarity-gold: #b8860b;
+  --rarity-misprint: #5d4a9c;
+
+  /* type */
+  --serif-en: "Cheltenham", "Sorts Mill Goudy", "Playfair Display", Georgia, serif;
+  --serif-cn: "Songti SC", "Noto Serif SC", "SimSun", serif;
+  --blackletter: "UnifrakturMaguntia", serif;
+  --mono: "Special Elite", "Courier New", Courier, monospace;
+}
+
+/* 煤气灯夜版 — the print shop after hours, not a "dark theme" */
+body.night {
+  --paper: #23211B;
+  --ink: #D9D0B6;
+  --ink-deep: #E9E3D3;
+  --red: #C4655C;
+  --brass: #A8842C;
+  --muted: #A29A82;
+  --faded: #8F8975;
+  --rule: #3B382F;
+  --desk: #0D0B08;
+}
+
+/* Vapor theme — vaporwave inks screen-printed on the same old paper.
+   Apply with body.vapor; saturation deliberately pulled down: printed, not lit. */
+body.vapor {
+  --red: #C25C8A;      /* magenta ink */
+  --brass: #5FB3B3;    /* cyan ink */
+  --ink: #3A3550;
+  --rarity-misprint: #9B8CDB; /* lavender */
+}

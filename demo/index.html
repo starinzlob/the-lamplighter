@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>old-press · type specimen</title>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:wght@500;700&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../references/tokens.css">
+<link rel="stylesheet" href="../references/textures.css">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--desk);
+    font-family: var(--serif-en), var(--serif-cn);
+    color: var(--ink);
+    padding: 3rem 1rem;
+  }
+  .sheet {
+    max-width: 880px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 3.5rem 3rem 4rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,.45);
+  }
+  .masthead {
+    font-family: var(--blackletter);
+    font-size: clamp(2.4rem, 7vw, 4.2rem);
+    text-align: center;
+    color: var(--ink-deep);
+  }
+  .dateline {
+    display: flex;
+    justify-content: space-between;
+    border-top: 3px double var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: .35em .2em;
+    margin: .8rem 0 2rem;
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: var(--muted);
+  }
+  h1.headline {
+    font-family: var(--serif-en);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    line-height: 1.12;
+    text-align: center;
+    color: var(--ink-deep);
+    margin-bottom: .6rem;
+  }
+  .op-deck { text-align: center; margin: 0 auto 2rem; max-width: 34em; }
+  section { margin-top: 2.6rem; }
+  .op-label { display: block; margin-bottom: 1rem; font-size: .8rem; }
+  .swatches { display: flex; flex-wrap: wrap; gap: .8rem; }
+  .swatch { width: 92px; }
+  .swatch i {
+    display: block; height: 56px; border: 1px solid var(--rule);
+  }
+  .swatch span {
+    font-family: var(--mono); font-size: .66rem; color: var(--muted);
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .seal {
+    width: 74px; height: 74px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--red) 0%, color-mix(in srgb, var(--red) 70%, black) 85%);
+    color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--blackletter); font-size: 1.6rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,.35), inset 0 0 0 4px color-mix(in srgb, var(--paper) 25%, transparent);
+  }
+  .toggle {
+    position: fixed; top: 1rem; right: 1rem;
+  }
+  article p { line-height: 1.7; font-size: .95rem; }
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
+</style>
+</head>
+<body>
+  <button class="op-typeblock toggle" onclick="document.body.classList.toggle('night')">夜版 / DAY</button>
+
+  <div class="sheet op-grain">
+    <div class="masthead op-inkbleed">The Old Press Gazette</div>
+    <div class="dateline">
+      <span>VOL. I — No. 1</span>
+      <span>LONDON, 1926</span>
+      <span>PRICE ONE PENNY</span>
+    </div>
+
+    <h1 class="headline op-misreg">EVERYTHING OFF THE OLD PRESS<br>一切皆出自老印刷机</h1>
+    <p class="op-deck">Being a complete specimen of the old-press style — halftone, letterpress, misregistered ink, and restrained editorial typography, in day and gaslit night.</p>
+
+    <section>
+      <span class="op-label">§ INKS OF THE HOUSE — 本铺常备油墨</span>
+      <div class="swatches">
+        <div class="swatch"><i style="background:var(--ink)"></i><span>--ink</span></div>
+        <div class="swatch"><i style="background:var(--ink-deep)"></i><span>--ink-deep</span></div>
+        <div class="swatch"><i style="background:var(--red)"></i><span>--red</span></div>
+        <div class="swatch"><i style="background:var(--brass)"></i><span>--brass</span></div>
+        <div class="swatch"><i style="background:var(--muted)"></i><span>--muted</span></div>
+        <div class="swatch"><i style="background:var(--rule)"></i><span>--rule</span></div>
+        <div class="swatch"><i style="background:var(--rarity-gold)"></i><span>烫金</span></div>
+        <div class="swatch"><i style="background:var(--rarity-misprint)"></i><span>错版</span></div>
+      </div>
+    </section>
+
+    <section>
+      <span class="op-label">§ THE COMPOSITOR'S CASE — 组件即印刷物</span>
+      <div class="row">
+        <button class="op-typeblock">铅字按钮 PRESS</button>
+        <div class="seal">印</div>
+        <div class="op-telegram" style="flex:1;min-width:260px">BUILD SUCCEEDED STOP DEPLOY AT DAWN STOP</div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <span class="op-label">§ SPECIMEN TEXT — 正文样张</span>
+      <article class="op-columns">
+        <p class="op-dropcap op-figures">On the night of the 14th, a fog thick as printer's ink settled over the Strand, and every gas lamp burned like a halftone dot against the dark. The compositor set his type by feel — 1926 had been a year of misregistered fortunes, each page slightly off, and all the more honest for it.</p>
+        <p class="op-figures">凡本铺印品，须经得起复印机的考验：不靠渐变，不靠辉光，只靠网点、油墨与留白。按钮是铅字块，徽章是火漆印，通知是电报——深夜的黑暗模式，不过是打烊后点起煤气灯的印刷铺。</p>
+      </article>
+    </section>
+
+    <section style="text-align:center">
+      <span class="op-label">— COLOPHON —</span>
+      <p class="op-figures" style="font-family:var(--mono);font-size:.75rem;color:var(--faded)">Set in Sorts Mill Goudy, UnifrakturMaguntia &amp; Special Elite · printed badly on purpose · MIT</p>
+    </section>
+  </div>
+</body>
+</html>
