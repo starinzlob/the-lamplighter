@@ -88,6 +88,7 @@ The repo root `index.html` is a self-contained card generator (serve the repo ro
 |-----------|----------|--------------|
 | 金句卡 / quote share card | `quote` | 1080×1440 (3:4) |
 | 报纸剪报 / newspaper clipping, spoof headline | `clip` | 860×auto |
+| 跑团道具 / TTRPG handout, CoC front page | `paper` | 1240×1754 (A4) |
 | 通缉令 / wanted poster | `wanted` | 1080×1440 |
 | 电报 / announcement, changelog, status card | `tele` | 1280×720 |
 

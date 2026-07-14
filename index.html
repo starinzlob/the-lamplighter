@@ -127,6 +127,19 @@
   .w-crime { flex: 1; font-size: 30px; line-height: 1.7; color: var(--ink); display: grid; place-items: center; padding: 0 30px; white-space: pre-wrap; }
   .w-reward { font-size: 44px; color: var(--ink-deep); border-top: 4px double var(--ink); border-bottom: 4px double var(--ink); padding: 18px 0; letter-spacing: .1em; }
   .w-apply { font-family: var(--mono); font-size: 18px; color: var(--faded); letter-spacing: .2em; margin-top: 24px; }
+  /* broadsheet handout (跑团道具整版报纸) */
+  .paper .frame { padding: 56px 54px; }
+  .paper .c-mast { font-size: 64px; }
+  .pp-head { font-size: 58px; line-height: 1.15; text-align: center; color: var(--ink-deep); margin: 30px 0 10px; font-weight: 700; }
+  .pp-deck { font-style: italic; text-align: center; color: var(--muted); font-size: 24px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 10px 0; margin-bottom: 26px; }
+  .pp-cols { column-count: 2; column-gap: 36px; column-rule: 1px solid var(--rule); font-size: 22px; line-height: 1.78; text-align: justify; white-space: pre-wrap; flex: 1; }
+  .pp-cols::first-letter { font-size: 3em; float: left; line-height: .8; padding: .04em .1em 0 0; color: var(--ink-deep); }
+  .pp-row { display: flex; gap: 30px; border-top: 4px double var(--ink); margin-top: 30px; padding-top: 24px; }
+  .pp-brief { flex: 1; }
+  .pp-brief h3 { font-size: 27px; text-align: center; color: var(--ink-deep); border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 12px; }
+  .pp-brief p { font-size: 19px; line-height: 1.7; text-align: justify; white-space: pre-wrap; }
+  .pp-ad { flex: 0 0 30%; border: 2px dashed var(--rule); padding: 16px; font-family: var(--mono); font-size: 17px; line-height: 1.75; color: var(--muted); white-space: pre-wrap; }
+  .pp-ad::before { content: "CLASSIFIED"; display: block; text-align: center; letter-spacing: .3em; border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 10px; color: var(--ink); }
   /* telegram */
   .tele { justify-content: center; }
   .tele .frame { padding: 46px 56px; }
@@ -188,7 +201,7 @@ const TPLS = [
     id:'clip', name:'报纸剪报',
     sizes:[{label:'剪报 860×自适应',w:860,h:0}],
     fields:[
-      {k:'kicker',l:'眉线（报名·日期）',t:'input',d:'THE OLD PRESS GAZETTE — LONDON, TUESDAY'},
+      {k:'kicker',l:'眉线（报名·日期，🎲 掷年代）',t:'input',d:'THE OLD PRESS GAZETTE — LONDON, TUESDAY',dice:true},
       {k:'head',l:'大标题',t:'input',d:'本地程序员深夜发布小工具'},
       {k:'deck',l:'副题 DECK',t:'input',d:'Being an account of a most curious contrivance.'},
       {k:'body',l:'正文（自动分两栏）',t:'textarea',d:'本报讯——昨夜有目击者称，一名程序员在自家阁楼点着煤气灯，将一件小工具推上了 GitHub。该工具据信能把任何文字印成一百年前的报纸。邻居表示噪音主要来自机械键盘。警方到场后没有发现违法行为，但带走了一杯凉掉的咖啡作为证物。'},
@@ -198,6 +211,33 @@ const TPLS = [
       <h2 class="op-misreg">${esc(d.head)}</h2>
       <div class="deck">${esc(d.deck)}</div>
       <div class="cols">${esc(d.body)}</div></div>`
+  },
+  {
+    id:'paper', name:'整版报纸·跑团道具',
+    sizes:[{label:'A4 竖版 1240×1754',w:1240,h:1754},{label:'3:4 海报 1080×1440',w:1080,h:1440}],
+    fields:[
+      {k:'mast',l:'报头 MASTHEAD',t:'input',d:'The Old Press Gazette'},
+      {k:'date',l:'日期栏（🎲 掷一个年代）',t:'input',d:'ARKHAM, THURSDAY, 14 OCTOBER 1926',dice:true},
+      {k:'head',l:'头版大标题',t:'input',d:'渔村一夜之间人去屋空'},
+      {k:'deck',l:'副题 DECK',t:'input',d:'Nets full, tables set, doors open — and not a soul remains.'},
+      {k:'body',l:'主新闻正文（自动分两栏）',t:'textarea',d:'本报讯——因斯茅斯以北的小渔村于周二清晨被过路邮差发现空无一人。屋内餐桌摆着尚未动过的晚饭，炉火早已熄灭，晾在码头的渔网里塞满了鱼——没有挣扎的痕迹，没有留下的字条。\n\n第一个进村的邮差霍布斯先生向本报描述："门都开着，狗链拴在桩上，链子那头什么也没有。最怪的是安静——那种安静不像没有人，倒像有什么东西在听。"他没有久留。\n\n唯一的异常来自村中教堂：讲坛上的圣经被翻到了不存在的一页，页边空白处布满潮湿的指印，指印的间距不属于任何一双人手。教区记录簿的最后一行写于周一午夜，字迹仓促："潮水今夜不退。"\n\n县警长布莱克伍德表示调查仍在进行，已从波士顿调派警力，并提醒沿岸居民入夜后锁好门窗、远离海岸。"没有证据表明发生了暴力事件，"他补充道，"目前也没有证据表明没有。"'},
+      {k:'brief1h',l:'简讯一·标题',t:'input',d:'教授失踪第七日'},
+      {k:'brief1',l:'简讯一·正文',t:'textarea',d:'密斯卡托尼克大学东方学系韦斯特教授自本月七日离校后音讯全无。同事称其临行前正在翻译一册"装订奇特"的手稿。校方悬赏征集线索。'},
+      {k:'brief2h',l:'简讯二·标题',t:'input',d:'海上异光目击'},
+      {k:'brief2',l:'简讯二·正文',t:'textarea',d:'多名渔民报告称，礁石以外的海面连续三夜出现绿色光柱，"像灯塔，但方向是从海底朝上"。海岸警卫队认为系磷光现象，不予立案。'},
+      {k:'ad',l:'分类广告',t:'textarea',d:'收购古籍、手稿、家传器物。\n价格从优，深夜可访。\n地址不详，有缘自至。'},
+    ],
+    render:d=>`<div class="frame op-grain">
+      <div class="c-mast">${esc(d.mast)}</div>
+      <div class="c-dateline"><span>EST. 1888</span><span>${esc(d.date)}</span><span>TWO CENTS</span></div>
+      <div class="pp-head op-misreg">${esc(d.head)}</div>
+      <div class="pp-deck">${esc(d.deck)}</div>
+      <div class="pp-cols">${esc(d.body)}</div>
+      <div class="pp-row">
+        <div class="pp-brief"><h3>${esc(d.brief1h)}</h3><p>${esc(d.brief1)}</p></div>
+        <div class="pp-brief"><h3>${esc(d.brief2h)}</h3><p>${esc(d.brief2)}</p></div>
+        <div class="pp-ad">${esc(d.ad)}</div>
+      </div></div>`
   },
   {
     id:'wanted', name:'通缉令',
@@ -239,11 +279,28 @@ function buildTabs(){
   $('#tpl-tabs').innerHTML = TPLS.map(t=>`<button data-id="${t.id}" class="${t===cur?'on':''}">${t.name}</button>`).join('');
   $('#tpl-tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=TPLS.find(t=>t.id===b.dataset.id);buildTabs();buildFields();buildSizes();paint();});
 }
+// 掷一个 1920 年代的日期（CoC 经典年代），城市池含常见跑团舞台
+function eraDate(){
+  const cities=['ARKHAM','LONDON','BOSTON','INNSMOUTH','CAIRO','SHANGHAI'];
+  const months=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  const days=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+  const y=1920+Math.floor(Math.random()*10), m=Math.floor(Math.random()*12), d=1+Math.floor(Math.random()*28);
+  return `${cities[Math.floor(Math.random()*cities.length)]}, ${days[Math.floor(Math.random()*7)]}, ${d} ${months[m]} ${y}`;
+}
 function buildFields(){
   $('#fields').innerHTML = cur.fields.map(f=>`<label>${f.l}</label>`+(f.t==='textarea'
     ?`<textarea data-k="${f.k}">${f.d}</textarea>`
-    :`<input data-k="${f.k}" value="${f.d.replace(/"/g,'&quot;')}">`)).join('');
+    :(f.dice
+      ?`<div class="row2"><div><input data-k="${f.k}" value="${f.d.replace(/"/g,'&quot;')}"></div><button class="dice" data-dice="${f.k}" title="掷一个年代日期" style="flex:0 0 3rem">🎲</button></div>`
+      :`<input data-k="${f.k}" value="${f.d.replace(/"/g,'&quot;')}">`))).join('');
   $('#fields').querySelectorAll('[data-k]').forEach(e=>e.addEventListener('input',paint));
+  $('#fields').querySelectorAll('[data-dice]').forEach(b=>{
+    b.style.cssText+='background:#2A2620;border:1px solid #55503F;color:#E9E3D3;cursor:pointer;font-size:1rem;';
+    b.onclick=()=>{
+      const v = b.dataset.dice==='kicker' ? 'THE OLD PRESS GAZETTE — '+eraDate() : eraDate();
+      $(`[data-k="${b.dataset.dice}"]`).value=v; paint();
+    };
+  });
 }
 function buildSizes(){
   $('#size').innerHTML = cur.sizes.map((s,i)=>`<option value="${i}">${s.label}</option>`).join('');
