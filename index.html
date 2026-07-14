@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Old Press · 老报纸卡片生成器</title>
 <meta name="description" content="把任何文字印成老报纸——金句卡、报纸剪报、通缉令、电报。复古印刷质感，支持中文，免费无水印。">
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
+<!-- crossorigin is required so html-to-image can read the stylesheet rules and embed fonts into exported PNGs -->
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="references/tokens.css">
 <link rel="stylesheet" href="references/textures.css">
 <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
@@ -81,19 +82,44 @@
   .print-btn:active { transform: translateY(2px); box-shadow: inset 0 -2px 0 rgba(0,0,0,.35); }
   .hint { font-size: .65rem; color: #6A6452; margin-top: .6rem; line-height: 1.6; }
   /* ---- stage ---- */
-  .stagewrap { flex: 1; display: grid; place-items: center; overflow: auto; padding: 2rem; }
-  #scaler { transform-origin: center center; }
+  .stagewrap { flex: 1; display: flex; overflow: auto; padding: 2rem; }
+  #scaler { margin: auto; }   /* centers like place-items but overflow stays scrollable, not clipped */
   /* =========================================================
      CARD STYLES — everything below is old-press printed matter
      ========================================================= */
   .card {
-    background: var(--paper);
+    /* real scanned-paper texture if assets/paper.jpg exists; theme color alone otherwise */
+    background-color: var(--paper);
+    background-image: url('assets/paper.jpg');
+    background-size: cover;
+    background-blend-mode: multiply;
     color: var(--ink);
     font-family: var(--serif-en), var(--serif-cn);
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+  }
+  .card.night, .card.vapor { background-blend-mode: soft-light; }
+  /* aging pass: halftone screen + foxing blotches + edge vignette (no blend modes — cheap) */
+  .card::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none; z-index: 3;
+    background-image:
+      radial-gradient(ellipse at 50% 48%, transparent 52%, rgba(64,48,22,.16) 100%),
+      radial-gradient(circle at 15% 10%, rgba(122,92,42,.07), transparent 20%),
+      radial-gradient(circle at 86% 80%, rgba(122,92,42,.08), transparent 24%),
+      radial-gradient(circle at 70% 18%, rgba(110,85,45,.05), transparent 15%),
+      radial-gradient(circle at 8% 72%, rgba(110,85,45,.06), transparent 18%),
+      radial-gradient(circle, rgba(44,41,36,.16) .6px, transparent 1.1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 5px 5px;
+  }
+  .card.night::before, .card.vapor::before {
+    background-image:
+      radial-gradient(ellipse at 50% 48%, transparent 50%, rgba(0,0,0,.35) 100%),
+      radial-gradient(circle, rgba(233,227,211,.07) .6px, transparent 1.1px);
+    background-size: 100% 100%, 5px 5px;
   }
   .card .frame { flex: 1; display: flex; flex-direction: column; border: 3px double var(--rule); margin: 26px; padding: 70px 64px; min-height: 0; }
   .c-mast { font-family: var(--blackletter); text-align: center; color: var(--ink-deep); font-size: 52px; }
@@ -102,6 +128,11 @@
     font-family: var(--mono); font-size: 19px; color: var(--muted);
     border-top: 4px double var(--ink); border-bottom: 1px solid var(--rule);
     padding: 9px 4px; margin-top: 20px;
+  }
+  /* display type: Playfair black for latin, 特粗宋 Noto Serif SC 900 for CJK */
+  .clip h2, .pp-head, .w-head, .q-body .txt {
+    font-family: "Playfair Display", "Noto Serif SC", var(--serif-en);
+    font-weight: 900;
   }
   /* quote card */
   .q-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 30px 0; }
@@ -112,13 +143,15 @@
   .q-by::before { content: "— "; color: var(--brass); }
   .c-foot { font-family: var(--mono); font-size: 17px; color: var(--faded); text-align: center; border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 26px; }
   /* clipping */
-  .clip { width: 860px; padding: 54px 58px 60px; background: var(--paper); }
+  /* inner element is .sheet — the bare template id lives on #stage itself, so never style it directly */
+  .clip .sheet { width: 860px; padding: 54px 58px 60px; }
   .clip-edge { clip-path: polygon(0 14px,3% 4px,7% 12px,12% 2px,18% 10px,24% 3px,30% 12px,37% 5px,44% 11px,51% 2px,58% 10px,65% 4px,72% 12px,79% 3px,86% 10px,93% 2px,100% 12px,100% calc(100% - 12px),95% calc(100% - 3px),89% calc(100% - 11px),82% calc(100% - 4px),75% calc(100% - 12px),68% calc(100% - 3px),61% calc(100% - 10px),54% calc(100% - 2px),47% calc(100% - 11px),40% calc(100% - 4px),33% calc(100% - 12px),26% calc(100% - 5px),19% calc(100% - 11px),12% calc(100% - 3px),6% calc(100% - 10px),0 calc(100% - 4px)); }
   .clip .kicker { font-family: var(--mono); font-size: 17px; letter-spacing: .2em; color: var(--muted); text-align: center; border-bottom: 1px solid var(--rule); padding-bottom: 10px; }
-  .clip h2 { font-size: 54px; line-height: 1.15; text-align: center; color: var(--ink-deep); margin: 26px 0 8px; }
+  .clip h2 { font-size: 58px; line-height: 1.14; letter-spacing: .01em; text-align: center; color: var(--ink-deep); margin: 26px 0 8px; }
   .clip .deck { font-style: italic; text-align: center; color: var(--muted); font-size: 23px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 9px 0; margin-bottom: 26px; }
   .clip .cols { column-count: 2; column-gap: 34px; column-rule: 1px solid var(--rule); font-size: 21px; line-height: 1.75; text-align: justify; white-space: pre-wrap; }
-  .clip .cols::first-letter { font-size: 3em; float: left; line-height: .8; padding: .04em .1em 0 0; color: var(--ink-deep); }
+  /* real span, not ::first-letter — pseudo first-letter doesn't survive html-to-image export */
+  .dropcap { font-size: 3em; float: left; line-height: .8; padding: .04em .1em 0 0; color: var(--ink-deep); font-weight: 900; }
   /* wanted */
   .wanted .frame { border-width: 5px; border-style: double; text-align: center; }
   .w-head { font-size: 150px; letter-spacing: .06em; color: var(--ink-deep); font-weight: 700; line-height: 1; }
@@ -133,7 +166,6 @@
   .pp-head { font-size: 58px; line-height: 1.15; text-align: center; color: var(--ink-deep); margin: 30px 0 10px; font-weight: 700; }
   .pp-deck { font-style: italic; text-align: center; color: var(--muted); font-size: 24px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 10px 0; margin-bottom: 26px; }
   .pp-cols { column-count: 2; column-gap: 36px; column-rule: 1px solid var(--rule); font-size: 22px; line-height: 1.78; text-align: justify; white-space: pre-wrap; flex: 1; }
-  .pp-cols::first-letter { font-size: 3em; float: left; line-height: .8; padding: .04em .1em 0 0; color: var(--ink-deep); }
   .pp-row { display: flex; gap: 30px; border-top: 4px double var(--ink); margin-top: 30px; padding-top: 24px; }
   .pp-brief { flex: 1; }
   .pp-brief h3 { font-size: 27px; text-align: center; color: var(--ink-deep); border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 12px; }
@@ -180,6 +212,8 @@
 </main>
 <script>
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// first char becomes a real drop-cap span (::first-letter doesn't survive PNG export)
+const dcap = s => s ? `<span class="dropcap">${esc(s[0])}</span>${esc(s.slice(1))}` : '';
 const TPLS = [
   {
     id:'quote', name:'金句卡',
@@ -206,11 +240,11 @@ const TPLS = [
       {k:'deck',l:'副题 DECK',t:'input',d:'Being an account of a most curious contrivance.'},
       {k:'body',l:'正文（自动分两栏）',t:'textarea',d:'本报讯——昨夜有目击者称，一名程序员在自家阁楼点着煤气灯，将一件小工具推上了 GitHub。该工具据信能把任何文字印成一百年前的报纸。邻居表示噪音主要来自机械键盘。警方到场后没有发现违法行为，但带走了一杯凉掉的咖啡作为证物。'},
     ],
-    render:d=>`<div class="clip clip-edge op-grain">
+    render:d=>`<div class="sheet clip-edge op-grain">
       <div class="kicker">${esc(d.kicker)}</div>
       <h2 class="op-misreg">${esc(d.head)}</h2>
       <div class="deck">${esc(d.deck)}</div>
-      <div class="cols">${esc(d.body)}</div></div>`
+      <div class="cols">${dcap(d.body)}</div></div>`
   },
   {
     id:'paper', name:'整版报纸·跑团道具',
@@ -232,7 +266,7 @@ const TPLS = [
       <div class="c-dateline"><span>EST. 1888</span><span>${esc(d.date)}</span><span>TWO CENTS</span></div>
       <div class="pp-head op-misreg">${esc(d.head)}</div>
       <div class="pp-deck">${esc(d.deck)}</div>
-      <div class="pp-cols">${esc(d.body)}</div>
+      <div class="pp-cols">${dcap(d.body)}</div>
       <div class="pp-row">
         <div class="pp-brief"><h3>${esc(d.brief1h)}</h3><p>${esc(d.brief1)}</p></div>
         <div class="pp-brief"><h3>${esc(d.brief2h)}</h3><p>${esc(d.brief2)}</p></div>
@@ -330,6 +364,9 @@ function fit(){
   sc.style.height=st.offsetHeight*k+'px';
 }
 window.addEventListener('resize',fit);
+// webfonts change metrics after first paint — re-fit when they land, and once more on full load
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{paint();});
+window.addEventListener('load',()=>requestAnimationFrame(fit));
 $('#theme').addEventListener('change',paint);
 $('#size').addEventListener('change',paint);
 $('#print').onclick = async ()=>{

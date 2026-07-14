@@ -26,9 +26,10 @@
 
   /* type */
   --serif-en: "Cheltenham", "Sorts Mill Goudy", "Playfair Display", Georgia, serif;
-  --serif-cn: "Songti SC", "Noto Serif SC", "SimSun", serif;
-  --blackletter: "UnifrakturMaguntia", serif;
-  --mono: "Special Elite", "Courier New", Courier, monospace;
+  --serif-cn: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  /* CJK has no blackletter/typewriter — fall through to heavy serif so mixed text stays styled */
+  --blackletter: "UnifrakturMaguntia", "Noto Serif SC", serif;
+  --mono: "Special Elite", "Courier New", "Noto Serif SC", Courier, monospace;
 }
 
 /* 煤气灯夜版 — the print shop after hours, not a "dark theme" */
