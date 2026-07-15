@@ -100,7 +100,8 @@
     display: flex;
     flex-direction: column;
   }
-  .card.night, .card.vapor { background-blend-mode: soft-light; }
+  .card.night { background-blend-mode: soft-light; }
+  .card.vapor { background-blend-mode: multiply; }
   /* aging pass: halftone screen + foxing blotches + edge vignette (no blend modes — cheap) */
   .card::before {
     content: "";
@@ -342,6 +343,28 @@ function buildSizes(){
 function data(){
   const d={}; $('#fields').querySelectorAll('[data-k]').forEach(e=>d[e.dataset.k]=e.value); return d;
 }
+// per-template / per-theme paper: assets/paper-<tpl>.jpg, paper-night.jpg, paper-vapor.jpg,
+// falling back to the global assets/paper.jpg, then to flat theme color
+const texCache = {};
+const loadTex = url => texCache[url] ??= new Promise(res=>{
+  const im = new Image();
+  im.onload = ()=>res(url); im.onerror = ()=>res(null);
+  im.src = url;
+});
+async function applyTex(){
+  const theme = $('#theme').value;
+  const cands = theme ? [`assets/paper-${theme}.jpg`, 'assets/paper.jpg']
+                      : [`assets/paper-${cur.id}.jpg`, 'assets/paper.jpg'];
+  const key = cands.join('|');
+  const stage = $('#stage');
+  stage.dataset.texKey = key;
+  for (const c of cands){
+    const ok = await loadTex(c);
+    if (stage.dataset.texKey !== key) return;       // template/theme changed mid-load
+    if (ok){ stage.style.backgroundImage = `url('${ok}')`; return; }
+  }
+  stage.style.backgroundImage = 'none';
+}
 function paint(){
   const s = cur.sizes[+$('#size').value||0];
   const stage = $('#stage');
@@ -352,6 +375,7 @@ function paint(){
   // theme class must live on the card for tokens to cascade
   stage.classList.remove('night','vapor');
   if($('#theme').value) stage.classList.add($('#theme').value);
+  applyTex();
   fit();
 }
 function fit(){
