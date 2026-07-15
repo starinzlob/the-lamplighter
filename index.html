@@ -6,10 +6,13 @@
 <title>The Old Press · 老报纸卡片生成器</title>
 <meta name="description" content="把任何文字印成老报纸——金句卡、报纸剪报、通缉令、电报。复古印刷质感，支持中文，免费无水印。">
 <!-- crossorigin is required so html-to-image can read the stylesheet rules and embed fonts into exported PNGs -->
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="references/tokens.css">
 <link rel="stylesheet" href="references/textures.css">
 <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<!-- 汇文明朝体 (public domain) — GB2312 subset split into 17 unicode-range chunks so the
+     browser and the PNG exporter only load/decode what's actually used -->
+<link rel="stylesheet" href="assets/fonts/huiwen.css">
 <style>
   * { margin: 0; box-sizing: border-box; }
   html, body { height: 100%; }
@@ -94,7 +97,7 @@
     background-size: cover;
     background-blend-mode: multiply;
     color: var(--ink);
-    font-family: var(--serif-en), var(--serif-cn);
+    font-family: var(--serif-en), "Huiwen-mincho", var(--serif-cn);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -130,11 +133,12 @@
     border-top: 4px double var(--ink); border-bottom: 1px solid var(--rule);
     padding: 9px 4px; margin-top: 20px;
   }
-  /* display type: Playfair black for latin, 站酷小薇 (民国金石味) for CJK,
-     特粗宋 Noto Serif SC 900 as fallback */
+  /* display type: Playfair black for latin, 汇文明朝体 (民国铅印复刻) for CJK,
+     特粗宋 Noto Serif SC 900 as fallback; no synthetic bold on the mincho */
   .clip h2, .pp-head, .w-head, .q-body .txt {
-    font-family: "Playfair Display", "ZCOOL XiaoWei", "Noto Serif SC", var(--serif-en);
+    font-family: "Playfair Display", "Huiwen-mincho", "Noto Serif SC", var(--serif-en);
     font-weight: 900;
+    font-synthesis: none;
   }
   /* quote card */
   .q-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 30px 0; }
