@@ -365,6 +365,26 @@ async function applyTex(){
   }
   stage.style.backgroundImage = 'none';
 }
+// deckled / worn edge: jagged clip-path around the whole card, seeded so it
+// stays stable while typing; regenerated per card size
+const edgeCache = {};
+function roughEdge(){
+  const stage = $('#stage');
+  const w = stage.offsetWidth, h = stage.offsetHeight;
+  if (!w || !h) return;
+  const key = w + 'x' + h;
+  if (!edgeCache[key]){
+    let seed = 1926;
+    const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+    const amp = 6, step = () => 12 + rnd() * 16, pts = [];
+    for (let x = 0; x < w; x += step()) pts.push(`${x|0}px ${(rnd()*amp).toFixed(1)}px`);
+    for (let y = 0; y < h; y += step()) pts.push(`${(w - rnd()*amp).toFixed(1)}px ${y|0}px`);
+    for (let x = w; x > 0; x -= step()) pts.push(`${x|0}px ${(h - rnd()*amp).toFixed(1)}px`);
+    for (let y = h; y > 0; y -= step()) pts.push(`${(rnd()*amp).toFixed(1)}px ${y|0}px`);
+    edgeCache[key] = `polygon(${pts.join(',')})`;
+  }
+  stage.style.clipPath = edgeCache[key];
+}
 function paint(){
   const s = cur.sizes[+$('#size').value||0];
   const stage = $('#stage');
@@ -377,6 +397,7 @@ function paint(){
   if($('#theme').value) stage.classList.add($('#theme').value);
   applyTex();
   fit();
+  roughEdge();
 }
 function fit(){
   const wrap=$('.stagewrap'), st=$('#stage'), sc=$('#scaler');
