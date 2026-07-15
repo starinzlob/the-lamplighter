@@ -15,3 +15,11 @@
 
 要求：≥1600×2200、画面无任何文字、亮度均匀、无明显暗角。
 夜版那张要**中间调灰棕**（不要纯黑），系统会用 soft-light 自动压成夜色。
+
+## 字体 Fonts
+
+- `fonts/lamplighter-display.woff2`：英文报头和可变文章标题，覆盖拉丁大小写、数字及常用标点。
+- `fonts/huiwen-*.woff2`：中文标题与正文回退，按 Unicode 区间分块加载。
+- `fonts/lamplighter-OFL.txt`：Lamplighter Display 与其 Newsreader 上游的 SIL OFL 1.1 许可。
+
+报头和标题必须保留为真实文字。不要把标题烘焙进背景图；用户换字时由浏览器按 `Lamplighter → Huiwen → Noto Serif SC → Georgia` 的顺序自动选取可用字形。

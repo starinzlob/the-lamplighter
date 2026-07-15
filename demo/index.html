@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>old-press · type specimen</title>
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:wght@500;700&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<title>The Lamplighter · type specimen</title>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="../references/tokens.css">
 <link rel="stylesheet" href="../references/textures.css">
+<link rel="stylesheet" href="../assets/fonts/huiwen.css">
+<link rel="stylesheet" href="../assets/fonts/lamplighter.css">
 <style>
   * { margin: 0; box-sizing: border-box; }
   body {
@@ -23,7 +25,9 @@
     box-shadow: 0 6px 24px rgba(0,0,0,.45);
   }
   .masthead {
-    font-family: var(--blackletter);
+    font-family: var(--masthead);
+    font-weight: 800;
+    text-transform: uppercase;
     font-size: clamp(2.4rem, 7vw, 4.2rem);
     text-align: center;
     color: var(--ink-deep);
@@ -40,7 +44,7 @@
     color: var(--muted);
   }
   h1.headline {
-    font-family: var(--serif-en);
+    font-family: var(--display-en);
     font-size: clamp(1.8rem, 5vw, 3rem);
     line-height: 1.12;
     text-align: center;
@@ -64,13 +68,21 @@
     background: radial-gradient(circle at 35% 30%, var(--red) 0%, color-mix(in srgb, var(--red) 70%, black) 85%);
     color: var(--paper);
     display: grid; place-items: center;
-    font-family: var(--blackletter); font-size: 1.6rem;
+    font-family: var(--masthead); font-size: 1.6rem;
     box-shadow: 0 2px 4px rgba(0,0,0,.35), inset 0 0 0 4px color-mix(in srgb, var(--paper) 25%, transparent);
   }
   .toggle {
     position: fixed; top: 1rem; right: 1rem;
   }
   article p { line-height: 1.7; font-size: .95rem; }
+  .alphabet {
+    font-family: var(--display-en);
+    font-weight: 800;
+    font-size: clamp(1.35rem, 4vw, 2.25rem);
+    line-height: 1.5;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
   hr { border: 0; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
 </style>
 </head>
@@ -78,15 +90,20 @@
   <button class="op-typeblock toggle" onclick="document.body.classList.toggle('night')">夜版 / DAY</button>
 
   <div class="sheet op-grain">
-    <div class="masthead op-inkbleed">The Old Press Gazette</div>
+    <div class="masthead op-inkbleed">The Lamplighter</div>
     <div class="dateline">
       <span>VOL. I — No. 1</span>
       <span>LONDON, 1926</span>
       <span>PRICE ONE PENNY</span>
     </div>
 
-    <h1 class="headline op-misreg">EVERYTHING OFF THE OLD PRESS<br>一切皆出自老印刷机</h1>
-    <p class="op-deck">Being a complete specimen of the old-press style — halftone, letterpress, misregistered ink, and restrained editorial typography, in day and gaslit night.</p>
+    <h1 class="headline op-misreg">FOG OVER THE STRAND<br>雾锁河岸，夜报付印</h1>
+    <p class="op-deck">A complete specimen of The Lamplighter — live headlines, letterpress texture, misregistered ink, and restrained editorial typography.</p>
+
+    <section>
+      <span class="op-label">§ LAMPLIGHTER DISPLAY — 可变标题字样</span>
+      <p class="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 · £ $ &amp; ? ! —</p>
+    </section>
 
     <section>
       <span class="op-label">§ INKS OF THE HOUSE — 本铺常备油墨</span>
@@ -123,7 +140,7 @@
 
     <section style="text-align:center">
       <span class="op-label">— COLOPHON —</span>
-      <p class="op-figures" style="font-family:var(--mono);font-size:.75rem;color:var(--faded)">Set in Sorts Mill Goudy, UnifrakturMaguntia &amp; Special Elite · printed badly on purpose · MIT</p>
+      <p class="op-figures" style="font-family:var(--mono);font-size:.75rem;color:var(--faded)">Set in Lamplighter Display, Huiwen Mincho, Sorts Mill Goudy &amp; Special Elite · MIT / OFL</p>
     </section>
   </div>
 </body>

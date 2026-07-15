@@ -1,4 +1,4 @@
-# old-press · image-generation prompts
+# The Lamplighter · image-generation prompts
 
 ## Material suffix (always append, any theme)
 

@@ -1,4 +1,4 @@
-/* old-press · design tokens
+/* The Lamplighter · design tokens
    Gaslight theme (default) — day on cream paper, night as gaslit dark.
    Drop into :root, toggle night with body.night. */
 
@@ -25,10 +25,13 @@
   --rarity-misprint: #5d4a9c;
 
   /* type */
-  --serif-en: "Cheltenham", "Sorts Mill Goudy", "Playfair Display", Georgia, serif;
+  --serif-en: "Sorts Mill Goudy", Georgia, serif;
   --serif-cn: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  /* CJK has no blackletter/typewriter — fall through to heavy serif so mixed text stays styled */
-  --blackletter: "UnifrakturMaguntia", "Noto Serif SC", serif;
+  /* The custom face owns Latin display text. CJK falls through to Huiwen/Noto. */
+  --display-en: "Lamplighter Display", "Huiwen-mincho", "Noto Serif SC", Georgia, serif;
+  --masthead: "Lamplighter Display", "Huiwen-mincho", "Noto Serif SC", Georgia, serif;
+  /* Compatibility alias for older templates. */
+  --blackletter: var(--masthead);
   --mono: "Special Elite", "Courier New", "Noto Serif SC", Courier, monospace;
 }
 

@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Old Press · 老报纸卡片生成器</title>
+<title>The Lamplighter · 点灯人报纸生成器</title>
 <meta name="description" content="把任何文字印成老报纸——金句卡、报纸剪报、通缉令、电报。复古印刷质感，支持中文，免费无水印。">
 <!-- crossorigin is required so html-to-image can read the stylesheet rules and embed fonts into exported PNGs -->
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="references/tokens.css">
 <link rel="stylesheet" href="references/textures.css">
 <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
 <!-- 汇文明朝体 (public domain) — GB2312 subset split into 17 unicode-range chunks so the
      browser and the PNG exporter only load/decode what's actually used -->
 <link rel="stylesheet" href="assets/fonts/huiwen.css">
+<link rel="stylesheet" href="assets/fonts/lamplighter.css">
 <style>
   * { margin: 0; box-sizing: border-box; }
   html, body { height: 100%; }
@@ -29,9 +30,9 @@
     border-bottom: 1px solid #55503F;
   }
   header.app h1 {
-    font-family: "UnifrakturMaguntia", serif;
+    font-family: var(--masthead);
     font-size: 2rem;
-    font-weight: 400;
+    font-weight: 800;
     color: #E9E3D3;
   }
   header.app p { font-size: .72rem; color: #A29A82; margin-top: .3rem; letter-spacing: .1em; }
@@ -88,7 +89,7 @@
   .stagewrap { flex: 1; display: flex; overflow: auto; padding: 2rem; }
   #scaler { margin: auto; }   /* centers like place-items but overflow stays scrollable, not clipped */
   /* =========================================================
-     CARD STYLES — everything below is old-press printed matter
+     CARD STYLES — everything below is Lamplighter printed matter
      ========================================================= */
   .card {
     /* real scanned-paper texture if assets/paper.jpg exists; theme color alone otherwise */
@@ -126,19 +127,31 @@
     background-size: 100% 100%, 5px 5px;
   }
   .card .frame { flex: 1; display: flex; flex-direction: column; border: 3px double var(--rule); margin: 26px; padding: 70px 64px; min-height: 0; }
-  .c-mast { font-family: var(--blackletter); text-align: center; color: var(--ink-deep); font-size: 52px; }
+  .c-mast {
+    font-family: var(--masthead);
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    color: var(--ink-deep);
+    font-size: 52px;
+    line-height: 1;
+  }
   .c-dateline {
     display: flex; justify-content: space-between;
     font-family: var(--mono); font-size: 19px; color: var(--muted);
     border-top: 4px double var(--ink); border-bottom: 1px solid var(--rule);
     padding: 9px 4px; margin-top: 20px;
   }
-  /* display type: Playfair black for latin, 汇文明朝体 (民国铅印复刻) for CJK,
-     特粗宋 Noto Serif SC 900 as fallback; no synthetic bold on the mincho */
+  /* Display type: Lamplighter for Latin, 汇文明朝体 for CJK,
+     Noto Serif SC 900 as fallback. Titles stay live and user-editable. */
   .clip h2, .pp-head, .w-head, .q-body .txt {
-    font-family: "Playfair Display", "Huiwen-mincho", "Noto Serif SC", var(--serif-en);
+    font-family: var(--headline-face, var(--display-en));
     font-weight: 900;
     font-synthesis: none;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
   }
   /* quote card */
   .q-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 30px 0; }
@@ -162,8 +175,8 @@
   .wanted .frame { border-width: 5px; border-style: double; text-align: center; }
   .w-head { font-size: 150px; letter-spacing: .06em; color: var(--ink-deep); font-weight: 700; line-height: 1; }
   .w-sub { font-family: var(--mono); font-size: 21px; letter-spacing: .3em; color: var(--muted); margin: 18px 0 30px; }
-  /* 英文名走 blackletter，中文名落到马善政毛笔体（题字感） */
-  .w-name { flex: 0 0 auto; font-family: "UnifrakturMaguntia", "Ma Shan Zheng", serif; font-size: 88px; color: var(--red); margin: 8px 0; }
+  /* 英文名走 Lamplighter，中文名落到马善政毛笔体（题字感） */
+  .w-name { flex: 0 0 auto; font-family: "Lamplighter Display", "Ma Shan Zheng", serif; font-size: 88px; color: var(--red); margin: 8px 0; }
   .w-crime { flex: 1; font-size: 30px; line-height: 1.7; color: var(--ink); display: grid; place-items: center; padding: 0 30px; white-space: pre-wrap; }
   .w-reward { font-size: 44px; color: var(--ink-deep); border-top: 4px double var(--ink); border-bottom: 4px double var(--ink); padding: 18px 0; letter-spacing: .1em; }
   .w-apply { font-family: var(--mono); font-size: 18px; color: var(--faded); letter-spacing: .2em; margin-top: 24px; }
@@ -190,8 +203,8 @@
 </head>
 <body>
 <header class="app">
-  <h1>The Old Press</h1>
-  <p>老报纸卡片生成器 · 把任何文字印成 1926 年的样子 · 免费无水印</p>
+  <h1>The Lamplighter</h1>
+  <p>点灯人报纸生成器 · 把任何文字印成 1926 年的样子 · 免费无水印</p>
 </header>
 <main>
   <div class="panel">
@@ -212,8 +225,14 @@
         <select id="size"></select>
       </div>
     </div>
+    <label>标题铅字 HEADLINE TYPE</label>
+    <select id="headline-font">
+      <option value="lamplighter">Lamplighter · 点灯人标题体</option>
+      <option value="mincho">Huiwen · 民国明朝体</option>
+      <option value="classic">Goudy · 英文古典衬线</option>
+    </select>
     <button class="print-btn" id="print">开 印 · PRINT</button>
-    <p class="hint">导出 2× 高清 PNG。字体来自 Google Fonts，首次导出需稍候字体内联。<br>An old-press printing house · MIT</p>
+    <p class="hint">报头使用 Lamplighter Display；正文标题可换字体，中英文自动回退。导出 2× 高清 PNG。<br>The Lamplighter press · MIT / OFL</p>
   </div>
   <div class="stagewrap"><div id="scaler"><div id="stage"></div></div></div>
 </main>
@@ -221,12 +240,17 @@
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 // first char becomes a real drop-cap span (::first-letter doesn't survive PNG export)
 const dcap = s => s ? `<span class="dropcap">${esc(s[0])}</span>${esc(s.slice(1))}` : '';
+const HEADLINE_FONTS = {
+  lamplighter: '"Lamplighter Display", "Huiwen-mincho", "Noto Serif SC", Georgia, serif',
+  mincho: '"Huiwen-mincho", "Noto Serif SC", "Lamplighter Display", Georgia, serif',
+  classic: '"Sorts Mill Goudy", "Huiwen-mincho", "Noto Serif SC", Georgia, serif',
+};
 const TPLS = [
   {
     id:'quote', name:'金句卡',
     sizes:[{label:'3:4 小红书 1080×1440',w:1080,h:1440},{label:'1:1 方形 1080×1080',w:1080,h:1080},{label:'16:9 横版 1280×720',w:1280,h:720}],
     fields:[
-      {k:'mast',l:'报头 MASTHEAD',t:'input',d:'The Old Press Gazette'},
+      {k:'mast',l:'报头 MASTHEAD（可改文字）',t:'input',d:'The Lamplighter'},
       {k:'q',l:'金句正文',t:'textarea',d:'凡本铺印品，须经得起复印机的考验。'},
       {k:'by',l:'署名',t:'input',d:'THE COMPOSITOR'},
       {k:'date',l:'日期栏',t:'input',d:'LONDON, 1926'},
@@ -242,7 +266,7 @@ const TPLS = [
     id:'clip', name:'报纸剪报',
     sizes:[{label:'剪报 860×自适应',w:860,h:0}],
     fields:[
-      {k:'kicker',l:'眉线（报名·日期，🎲 掷年代）',t:'input',d:'THE OLD PRESS GAZETTE — LONDON, TUESDAY',dice:true},
+      {k:'kicker',l:'眉线（报名·日期，🎲 掷年代）',t:'input',d:'THE LAMPLIGHTER — LONDON, TUESDAY',dice:true},
       {k:'head',l:'大标题',t:'input',d:'本地程序员深夜发布小工具'},
       {k:'deck',l:'副题 DECK',t:'input',d:'Being an account of a most curious contrivance.'},
       {k:'body',l:'正文（自动分两栏）',t:'textarea',d:'本报讯——昨夜有目击者称，一名程序员在自家阁楼点着煤气灯，将一件小工具推上了 GitHub。该工具据信能把任何文字印成一百年前的报纸。邻居表示噪音主要来自机械键盘。警方到场后没有发现违法行为，但带走了一杯凉掉的咖啡作为证物。'},
@@ -257,7 +281,7 @@ const TPLS = [
     id:'paper', name:'整版报纸·跑团道具',
     sizes:[{label:'A4 竖版 1240×1754',w:1240,h:1754},{label:'3:4 海报 1080×1440',w:1080,h:1440}],
     fields:[
-      {k:'mast',l:'报头 MASTHEAD',t:'input',d:'The Old Press Gazette'},
+      {k:'mast',l:'报头 MASTHEAD（可改文字）',t:'input',d:'The Lamplighter'},
       {k:'date',l:'日期栏（🎲 掷一个年代）',t:'input',d:'ARKHAM, THURSDAY, 14 OCTOBER 1926',dice:true},
       {k:'head',l:'头版大标题',t:'input',d:'渔村一夜之间人去屋空'},
       {k:'deck',l:'副题 DECK',t:'input',d:'Nets full, tables set, doors open — and not a soul remains.'},
@@ -338,7 +362,7 @@ function buildFields(){
   $('#fields').querySelectorAll('[data-dice]').forEach(b=>{
     b.style.cssText+='background:#2A2620;border:1px solid #55503F;color:#E9E3D3;cursor:pointer;font-size:1rem;';
     b.onclick=()=>{
-      const v = b.dataset.dice==='kicker' ? 'THE OLD PRESS GAZETTE — '+eraDate() : eraDate();
+      const v = b.dataset.dice==='kicker' ? 'THE LAMPLIGHTER — '+eraDate() : eraDate();
       $(`[data-k="${b.dataset.dice}"]`).value=v; paint();
     };
   });
@@ -397,13 +421,26 @@ function paint(){
   stage.className = 'card ' + cur.id + ' ' + ($('#theme').value||'');
   stage.style.width = s.w+'px';
   stage.style.height = s.h? s.h+'px':'auto';
+  stage.style.setProperty('--headline-face', HEADLINE_FONTS[$('#headline-font').value]);
   stage.innerHTML = cur.render(data());
   // theme class must live on the card for tokens to cascade
   stage.classList.remove('night','vapor');
   if($('#theme').value) stage.classList.add($('#theme').value);
   applyTex();
+  fitMastheads();
   fit();
   roughEdge();
+}
+function fitMastheads(){
+  document.querySelectorAll('#stage .c-mast').forEach(el=>{
+    el.style.fontSize='';
+    let size=parseFloat(getComputedStyle(el).fontSize);
+    const min=28;
+    while(el.scrollWidth>el.clientWidth && size>min){
+      size-=1;
+      el.style.fontSize=size+'px';
+    }
+  });
 }
 function fit(){
   const wrap=$('.stagewrap'), st=$('#stage'), sc=$('#scaler');
@@ -420,12 +457,15 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{paint
 window.addEventListener('load',()=>requestAnimationFrame(fit));
 $('#theme').addEventListener('change',paint);
 $('#size').addEventListener('change',paint);
+$('#headline-font').addEventListener('change',paint);
 $('#print').onclick = async ()=>{
   const btn=$('#print'); btn.textContent='印 刷 中 …';
   try{
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    fitMastheads();
     const png = await htmlToImage.toPng($('#stage'),{pixelRatio:2});
     const a=document.createElement('a');
-    a.href=png; a.download=`oldpress-${cur.id}-${Date.now()}.png`; a.click();
+    a.href=png; a.download=`lamplighter-${cur.id}-${Date.now()}.png`; a.click();
   }catch(e){ alert('印刷机卡纸了: '+e.message); }
   btn.textContent='开 印 · PRINT';
 };

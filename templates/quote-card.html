@@ -2,10 +2,12 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>old-press · quote card 1080×1440</title>
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<title>The Lamplighter · quote card 1080×1440</title>
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Special+Elite&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="../references/tokens.css">
 <link rel="stylesheet" href="../references/textures.css">
+<link rel="stylesheet" href="../assets/fonts/huiwen.css">
+<link rel="stylesheet" href="../assets/fonts/lamplighter.css">
 <style>
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1080px; height: 1440px; overflow: hidden; }
@@ -24,7 +26,9 @@
     margin: 28px;
   }
   .masthead {
-    font-family: var(--blackletter);
+    font-family: var(--masthead);
+    font-weight: 800;
+    text-transform: uppercase;
     font-size: 54px;
     text-align: center;
     color: var(--ink-deep);
@@ -48,6 +52,7 @@
     padding: 40px 0;
   }
   .quote blockquote {
+    font-family: var(--display-en);
     font-size: 64px;
     line-height: 1.42;
     color: var(--ink-deep);
@@ -77,7 +82,7 @@
 </head>
 <body>
   <div class="card op-grain">
-    <div class="masthead op-inkbleed" data-f="mast">The Old Press Gazette</div>
+    <div class="masthead op-inkbleed" data-f="mast">The Lamplighter</div>
     <div class="dateline">
       <span data-f="vol">EXTRA EDITION</span>
       <span data-f="date">LONDON</span>
