@@ -6,7 +6,7 @@
 <title>The Old Press · 老报纸卡片生成器</title>
 <meta name="description" content="把任何文字印成老报纸——金句卡、报纸剪报、通缉令、电报。复古印刷质感，支持中文，免费无水印。">
 <!-- crossorigin is required so html-to-image can read the stylesheet rules and embed fonts into exported PNGs -->
-<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=UnifrakturMaguntia&family=Special+Elite&family=Noto+Serif+SC:wght@500;700;900&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" crossorigin="anonymous">
 <link rel="stylesheet" href="references/tokens.css">
 <link rel="stylesheet" href="references/textures.css">
 <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
@@ -130,9 +130,10 @@
     border-top: 4px double var(--ink); border-bottom: 1px solid var(--rule);
     padding: 9px 4px; margin-top: 20px;
   }
-  /* display type: Playfair black for latin, 特粗宋 Noto Serif SC 900 for CJK */
+  /* display type: Playfair black for latin, 站酷小薇 (民国金石味) for CJK,
+     特粗宋 Noto Serif SC 900 as fallback */
   .clip h2, .pp-head, .w-head, .q-body .txt {
-    font-family: "Playfair Display", "Noto Serif SC", var(--serif-en);
+    font-family: "Playfair Display", "ZCOOL XiaoWei", "Noto Serif SC", var(--serif-en);
     font-weight: 900;
   }
   /* quote card */
@@ -157,7 +158,8 @@
   .wanted .frame { border-width: 5px; border-style: double; text-align: center; }
   .w-head { font-size: 150px; letter-spacing: .06em; color: var(--ink-deep); font-weight: 700; line-height: 1; }
   .w-sub { font-family: var(--mono); font-size: 21px; letter-spacing: .3em; color: var(--muted); margin: 18px 0 30px; }
-  .w-name { flex: 0 0 auto; font-family: var(--blackletter); font-size: 88px; color: var(--red); margin: 8px 0; }
+  /* 英文名走 blackletter，中文名落到马善政毛笔体（题字感） */
+  .w-name { flex: 0 0 auto; font-family: "UnifrakturMaguntia", "Ma Shan Zheng", serif; font-size: 88px; color: var(--red); margin: 8px 0; }
   .w-crime { flex: 1; font-size: 30px; line-height: 1.7; color: var(--ink); display: grid; place-items: center; padding: 0 30px; white-space: pre-wrap; }
   .w-reward { font-size: 44px; color: var(--ink-deep); border-top: 4px double var(--ink); border-bottom: 4px double var(--ink); padding: 18px 0; letter-spacing: .1em; }
   .w-apply { font-family: var(--mono); font-size: 18px; color: var(--faded); letter-spacing: .2em; margin-top: 24px; }
